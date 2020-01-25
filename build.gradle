@@ -102,6 +102,7 @@ artifacts {
 
 
 curseforge {
+    if (priv == null) return
     apiKey = priv.curseforge_api_key
 
     project {
@@ -114,7 +115,7 @@ curseforge {
         addArtifact deobfJar
     }
     options {
-        debug = true
+        debug = false
     }
 }
 
