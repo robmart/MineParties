@@ -21,7 +21,7 @@ jobs:
     - name: Permission
       run: chmod +x gradlew
     - name: Setup
-      run: ./gradlew setupCIWorkspace
+      run: ./gradlew setupCIWorkspace build
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
