@@ -22,9 +22,8 @@ jobs:
       run: ./gradlew setupCIWorkspace
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
+      with:
         # Artifact name
-        name: 
-        *.jar
+        name: .jar
         # Directory containing files to upload
-        path: 
-        build\libs
+        path: build\libs
