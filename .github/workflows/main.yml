@@ -17,11 +17,9 @@ jobs:
         java-package: jdk
         # The architecture (x86, x64) of the package.
         architecture: x64
-    - name: List files
-      run: ls
+    - uses: actions/checkout@v1
     - name: Permission
       run: chmod +x gradlew
-    - uses: actions/checkout@v1
     - name: Setup
       run: ./gradlew setupCIWorkspace
     - name: Upload artifact
