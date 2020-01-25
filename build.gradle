@@ -1,0 +1,133 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { 
+		url = "http://files.minecraftforge.net/maven" 
+		}
+		maven {
+		url = "https://plugins.gradle.org/m2/"
+		}
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'    
+		classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: "com.matthewprenger.cursegradle"
+
+ext.configFile = file('gradle.properties')
+ext.privFile = file('private.properties')
+
+ext.config = parseConfig(configFile)
+ext.priv = parseConfig(privFile)
+
+version = "${config.mc_version}-${config.mod_version}.${config.build_number}"
+group="${config.author}.mods.${config.mod_name}".toLowerCase()
+archivesBaseName = config.mod_name
+
+sourceCompatibility = targetCompatibility = '1.8'
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+
+minecraft {
+    version = "${mc_version}-${forge_version}"
+    runDir = "run"
+
+    if (project.hasProperty('mappings_version'))
+        mappings = project.mappings_version
+
+    replace 'GRADLE:BUILD', config.build_number
+    replace 'GRADLE:VERSION', this.version
+    replace 'GRADLE:MCVERSION', config.mod_version
+
+    replaceIn 'Reference.java'
+
+    useDepAts = true
+    makeObfSourceJar = true
+}
+
+dependencies {
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+                
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+        
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+
+/**
+ * Increments the buildnumber in your config file, and saves it
+ */
+task incrementBuildNumber(dependsOn: reobfJar) {
+    doLast {
+        config.build_number = (config.build_number.toString().toInteger()) + 1
+        configFile.withWriter {
+            config.toProperties().store(it, "")
+        }
+    }
+}
+
+task sourcesJar(type: Jar, dependsOn: 'sourceMainJava') {
+    from "build/sources/java"
+    from "build/resources/main/java"
+    classifier "sources"
+}
+
+task deobfJar(type: Jar, dependsOn: 'jar') {
+    from "build/source/main"
+    classifier "dev"
+}
+deobfJar.dependsOn(incrementBuildNumber)
+
+task javadocJar(type: Jar, dependsOn: 'javadoc') {
+    from "build/docs/javadoc"
+    classifier "javadoc"
+}
+artifacts {
+    archives sourcesJar, javadocJar, deobfJar
+}
+
+
+curseforge {
+    apiKey = priv.curseforge_api_key
+
+    project {
+        id = '359952'
+        changelog = 'Changes'
+        releaseType = 'alpha'
+
+        mainArtifact jar
+        addArtifact sourcesJar
+        addArtifact deobfJar
+    }
+    options {
+        debug = true
+    }
+}
+
+def parseConfig(File config) {
+    if(config.exists()){
+        config.withReader {
+            def prop = new Properties()
+            prop.load(it)
+            return (new ConfigSlurper().parse(prop))
+        }
+    } else {
+        return null
+    }
+}
+
+defaultTasks 'clean', 'build', 'incrementBuildNumber', 'curseforge'
