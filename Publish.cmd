@@ -1,0 +1,1 @@
+gradlew incrementBuildNumber curseforge

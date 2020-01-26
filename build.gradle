@@ -131,6 +131,4 @@ def parseConfig(File config) {
     }
 }
 
-jar.dependsOn(incrementBuildNumber)
-
 defaultTasks 'clean', 'build', 'incrementBuildNumber', 'curseforge'
