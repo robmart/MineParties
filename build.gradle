@@ -71,7 +71,7 @@ processResources {
 /**
  * Increments the buildnumber in your config file, and saves it
  */
-task incrementBuildNumber(dependsOn: reobfJar) {
+task incrementBuildNumber {
     doLast {
         config.build_number = (config.build_number.toString().toInteger()) + 1
         configFile.withWriter {
@@ -130,5 +130,7 @@ def parseConfig(File config) {
         return null
     }
 }
+
+jar.dependsOn(incrementBuildNumber)
 
 defaultTasks 'clean', 'build', 'incrementBuildNumber', 'curseforge'
