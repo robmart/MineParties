@@ -22,12 +22,10 @@ jobs:
       run: chmod +x gradlew
     - name: Setup
       run: ./gradlew setupCIWorkspace build
-    - name: List files
-      run: ls
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
         # Artifact name
-        name:
+        name: libs/
         # Directory containing files to upload
         path: build/libs/
