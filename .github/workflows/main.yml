@@ -30,4 +30,4 @@ jobs:
         # Artifact name
         name: MineParties*
         # Directory containing files to upload
-        path: build\libs
+        path: /build/libs
