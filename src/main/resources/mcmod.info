@@ -1,0 +1,20 @@
+[
+  {
+    "modid": "mineparties",
+    "name": "MineParties",
+    "description": "This mod aims to recreate RPG/MMO like parties inside of Minecraft. \nIt was primarily created for my other mod, RPGMode.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "https://www.curseforge.com/minecraft/mc-mods/mineparties",
+    "updateUrl": "",
+    "authorList": [
+      "Robmart"
+    ],
+    "logoFile": "",
+    "screenshots": [
+    ],
+    "parent": "",
+    "dependencies": [
+    ]
+  }
+]
