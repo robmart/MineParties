@@ -1,4 +1,4 @@
-package robmart.mods.mineparties.reference;
+package robmart.mods.mineparties.api.reference;
 
 /**
  * Created by Robmart.

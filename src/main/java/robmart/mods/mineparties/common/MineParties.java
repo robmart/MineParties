@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static robmart.mods.mineparties.reference.Reference.*;
+import static robmart.mods.mineparties.api.reference.Reference.*;
 
 /**
  * Created by Robmart.
