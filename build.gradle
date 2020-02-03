@@ -52,7 +52,8 @@ minecraft {
 }
 
 dependencies {
-    compile "curse.maven:re-targetingapi:2872514"
+    compile "curse.maven:re-targetingapi:2874185"
+    compile "curse.maven:re-targetingapi-src:2874196"
 }
 
 processResources {
@@ -83,10 +84,10 @@ task incrementBuildNumber {
     }
 }
 
-task sourcesJar(type: Jar, dependsOn: 'sourceMainJava') {
-    from "build/sources/java"
-    from "build/resources/main/java"
-    classifier "sources"
+task srcJar(type: Jar) {
+    from(sourceSets.main.java)
+    classifier = 'sources'
+    archiveName = "${baseName}-${version}-sources.jar"
 }
 
 task deobfJar(type: Jar, dependsOn: 'jar') {
@@ -94,7 +95,7 @@ task deobfJar(type: Jar, dependsOn: 'jar') {
     classifier "dev"
 }
 artifacts {
-    archives sourcesJar, deobfJar
+    archives srcJar, deobfJar
 }
 
 
@@ -108,8 +109,7 @@ curseforge {
         releaseType = 'alpha'
 
         mainArtifact jar
-        addArtifact sourcesJar
-        addArtifact deobfJar
+        addArtifact srcJar
     }
     options {
         debug = false

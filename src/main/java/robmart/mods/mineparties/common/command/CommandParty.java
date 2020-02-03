@@ -3,9 +3,15 @@ package robmart.mods.mineparties.common.command;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
+import robmart.mods.mineparties.api.faction.FactionParty;
 import robmart.mods.mineparties.api.reference.Reference;
+import robmart.mods.targetingapi.api.Targeting;
+import robmart.mods.targetingapi.api.faction.IFaction;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -75,6 +81,30 @@ public class CommandParty extends CommandBase {
      */
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+        Entity entitySender = sender.getCommandSenderEntity();
+        if (args[0].equals("create")) {
+            for (IFaction faction : Targeting.getFactionsFromEntity(entitySender)) {
+                if (faction instanceof FactionParty)
+                    throw new CommandException("Player is already in a party"); //TODO Loc
+            }
+
+            IFaction partyFaction = new FactionParty(String.format("%s's Party", sender.getName()));
+            partyFaction.addMemberEntity(entitySender);
+            Targeting.registerFaction(partyFaction);
+        } else if (args[0].equals("list")) {
+            for (IFaction faction : Targeting.getFactionsFromEntity(entitySender)) {
+                if (faction instanceof FactionParty) {
+                    StringBuilder message = new StringBuilder();
+                    for (Object object : faction.getAllMembers()) {
+                        if (object instanceof EntityPlayer)
+                            message.append(((EntityPlayer) object).getName()).append(", ");
+                        else
+                            message.append(object.toString()).append(", ");
+                    }
+                    entitySender.sendMessage(new TextComponentString(message.toString()));
+                }
+            }
+        }
     }
 
     @Override
