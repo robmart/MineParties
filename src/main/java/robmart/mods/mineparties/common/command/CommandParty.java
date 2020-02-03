@@ -1,8 +1,6 @@
 package robmart.mods.mineparties.common.command;
 
-import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
+import net.minecraft.command.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
@@ -46,6 +44,7 @@ public class CommandParty extends CommandBase {
     public CommandParty() {
         subcommands.add("create");
         subcommands.add("list");
+        subcommands.add("invite");
     }
 
     /**
@@ -65,7 +64,7 @@ public class CommandParty extends CommandBase {
     /**
      * Gets the usage string for the command.
      *
-     * @param sender
+     * @param sender The sender of the command
      */
     @Override
     public String getUsage(ICommandSender sender) {
@@ -75,13 +74,17 @@ public class CommandParty extends CommandBase {
     /**
      * Callback for when the command is executed
      *
-     * @param server
-     * @param sender
-     * @param args
+     * @param server The server the command is executed on
+     * @param sender The sender of the command
+     * @param args The array of command arguments
      */
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         Entity entitySender = sender.getCommandSenderEntity();
+
+        if (args.length == 0)
+            throw new WrongUsageException("A sub command needs to be specified");
+
         if (args[0].equals("create")) {
             for (IFaction faction : Targeting.getFactionsFromEntity(entitySender)) {
                 if (faction instanceof FactionParty)
@@ -91,7 +94,7 @@ public class CommandParty extends CommandBase {
             IFaction partyFaction = new FactionParty(String.format("%s's Party", sender.getName()));
             partyFaction.addMemberEntity(entitySender);
             Targeting.registerFaction(partyFaction);
-        } else if (args[0].equals("list")) {
+        } else if (args[0].equals("list")) { //TODO: Error- no party
             for (IFaction faction : Targeting.getFactionsFromEntity(entitySender)) {
                 if (faction instanceof FactionParty) {
                     StringBuilder message = new StringBuilder();
@@ -104,12 +107,23 @@ public class CommandParty extends CommandBase {
                     entitySender.sendMessage(new TextComponentString(message.toString()));
                 }
             }
+        } else if (args[0].equals("invite")) {
+            if (args.length == 1)
+                throw new PlayerNotFoundException("Need to specify a player");
+
+            EntityPlayer invitedPlayer = sender.getServer().getPlayerList().getPlayerByUsername(args[1]);
+            invitedPlayer.sendMessage(new TextComponentString("Boop"));
         }
     }
 
     @Override
     public List<String> getTabCompletions(
             MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
-        return args.length == 1 ? subcommands : null;
+        if (args.length == 1)
+            return subcommands;
+        if (args.length == 2 && args[0].equals("invite")) //TODO: Somethings wrong i can feel it
+            return getListOfStringsMatchingLastWord(server.getOnlinePlayerNames());
+
+        return null;
     }
 }
