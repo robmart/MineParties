@@ -3,6 +3,7 @@ package robmart.mods.mineparties.common.command;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import robmart.mods.mineparties.api.notification.Notification;
 import robmart.mods.mineparties.api.reference.Reference;
@@ -59,8 +60,13 @@ public class CommandNotification extends CommandBase {
      * @param args
      */
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException { //TODO: Exception when notification doesn't exist
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+        if (args.length != 1)
+            throw new WrongUsageException(getUsage(sender));
+
         Notification notification = Notification.getNotificationList().get(args[0]);
+        if (notification == null)
+            throw new CommandException("commands.mineparties.notification.notexist");
         try {
             notification.execute();
         } catch (InvocationTargetException | IllegalAccessException e) {
