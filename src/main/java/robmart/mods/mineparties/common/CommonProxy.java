@@ -4,6 +4,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import robmart.mods.mineparties.common.command.CommandNotification;
 import robmart.mods.mineparties.common.command.CommandParty;
 
 /**
@@ -37,5 +38,6 @@ public class CommonProxy {
 
     public void serverStarting(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandParty());
+        event.registerServerCommand(new CommandNotification());
     }
 }

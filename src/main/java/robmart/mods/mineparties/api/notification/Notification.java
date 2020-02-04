@@ -58,7 +58,7 @@ public class Notification {
         return notificationList;
     }
 
-    public void SendMessage() {
+    public void sendMessage() {
         ITextComponent textComponent = new TextComponentString(this.message);
         textComponent.setStyle(new Style().setUnderlined(true).setClickEvent(
                 new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/notification " + getIdentifier())));
@@ -67,7 +67,8 @@ public class Notification {
         this.hasSentMessage = true;
     }
 
-    public void Execute() {
+    public void execute() {
+        playerReceiver.sendMessage(new TextComponentString("Boop"));
         notificationList.remove(this.identifier);
     }
 
@@ -90,7 +91,7 @@ public class Notification {
         public static void onServerTick(TickEvent.ServerTickEvent event) {
             for (Notification notification : getNotificationList().values()) {
                 if (!notification.hasSentMessage)
-                    notification.SendMessage();
+                    notification.sendMessage();
             }
         }
     }

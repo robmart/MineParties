@@ -1,5 +1,12 @@
 package robmart.mods.mineparties.common.command;
 
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.server.MinecraftServer;
+import robmart.mods.mineparties.api.notification.Notification;
+import robmart.mods.mineparties.api.reference.Reference;
+
 /**
  * Created by Robmart.
  * <p>
@@ -19,5 +26,39 @@ package robmart.mods.mineparties.common.command;
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class CommandNotification {
+public class CommandNotification extends CommandBase {
+    private static final String NAME = "notification";
+    private static final int    PERMISSION_LEVEL = 0;
+    private static final String COMMAND_USAGE    = String.format("commands.%s.%s.usage", Reference.MOD_ID, NAME);
+
+    /**
+     * Gets the name of the command
+     */
+    @Override
+    public String getName() {
+        return NAME;
+    }
+
+    /**
+     * Gets the usage string for the command.
+     *
+     * @param sender
+     */
+    @Override
+    public String getUsage(ICommandSender sender) {
+        return COMMAND_USAGE;
+    }
+
+    /**
+     * Callback for when the command is executed
+     *
+     * @param server
+     * @param sender
+     * @param args
+     */
+    @Override
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+        Notification notification = Notification.getNotificationList().get(args[0]);
+        notification.execute();
+    }
 }
