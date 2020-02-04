@@ -7,6 +7,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import robmart.mods.mineparties.api.faction.FactionParty;
+import robmart.mods.mineparties.api.notification.Notification;
 import robmart.mods.mineparties.api.reference.Reference;
 import robmart.mods.targetingapi.api.Targeting;
 import robmart.mods.targetingapi.api.faction.IFaction;
@@ -112,7 +113,7 @@ public class CommandParty extends CommandBase {
                 throw new PlayerNotFoundException("Need to specify a player");
 
             EntityPlayer invitedPlayer = sender.getServer().getPlayerList().getPlayerByUsername(args[1]);
-            invitedPlayer.sendMessage(new TextComponentString("Boop"));
+            new Notification(invitedPlayer, String.format("%s has invited you to a party. Click here to accept", entitySender.getName()));
         }
     }
 
