@@ -7,6 +7,8 @@ import net.minecraft.server.MinecraftServer;
 import robmart.mods.mineparties.api.notification.Notification;
 import robmart.mods.mineparties.api.reference.Reference;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * Created by Robmart.
  * <p>
@@ -59,6 +61,10 @@ public class CommandNotification extends CommandBase {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         Notification notification = Notification.getNotificationList().get(args[0]);
-        notification.execute();
+        try {
+            notification.execute();
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 }

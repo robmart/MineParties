@@ -112,8 +112,14 @@ public class CommandParty extends CommandBase {
             if (args.length == 1)
                 throw new PlayerNotFoundException("Need to specify a player");
 
+            IFaction faction = Targeting.getFactionsFromEntity(entitySender).get(0);
             EntityPlayer invitedPlayer = sender.getServer().getPlayerList().getPlayerByUsername(args[1]);
-            new Notification(invitedPlayer, String.format("%s has invited you to a party. Click here to accept", entitySender.getName()));
+            try {
+                new Notification(invitedPlayer, String.format("%s has invited you to a party. Click here to accept", entitySender.getName()),
+                        faction.getClass().getMethod("addMemberEntity", Entity.class), faction, invitedPlayer);
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -11,6 +11,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import robmart.mods.mineparties.api.reference.Reference;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.UUID;
 
@@ -40,10 +42,16 @@ public class Notification {
     private EntityPlayer playerReceiver;
     private String message;
     private boolean hasSentMessage = false;
+    private Method method;
+    private Object instance;
+    private Object[] args;
 
-    public Notification(EntityPlayer player, String message) {
+    public Notification(EntityPlayer player, String message, Method method, Object instance, Object... args) {
         this.playerReceiver = player;
         this.message = message;
+        this.method = method;
+        this.instance = instance;
+        this.args = args;
 
         String uuid = "";
         while(uuid.equals("") || notificationList.keySet().contains(uuid)) {
@@ -67,8 +75,8 @@ public class Notification {
         this.hasSentMessage = true;
     }
 
-    public void execute() {
-        playerReceiver.sendMessage(new TextComponentString("Boop"));
+    public void execute() throws InvocationTargetException, IllegalAccessException {
+        this.method.invoke(this.instance, this.args);
         notificationList.remove(this.identifier);
     }
 
