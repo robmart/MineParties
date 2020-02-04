@@ -1,5 +1,8 @@
 package robmart.mods.mineparties.api.faction;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.TextComponentTranslation;
 import robmart.mods.targetingapi.api.faction.Faction;
 
 /**
@@ -24,5 +27,16 @@ import robmart.mods.targetingapi.api.faction.Faction;
 public class FactionParty extends Faction {
     public FactionParty(String name) {
         super(name);
+    }
+
+    @Override
+    public void addMemberEntity(Entity entityToAdd) {
+        if (entityToAdd instanceof EntityPlayer) {
+            for (Object member : getAllMembers()) {
+                if (member instanceof EntityPlayer)
+                    ((EntityPlayer) member).sendStatusMessage(new TextComponentTranslation("commands.mineparties.party.joined", entityToAdd.getName()), false);
+            }
+        }
+        super.addMemberEntity(entityToAdd);
     }
 }

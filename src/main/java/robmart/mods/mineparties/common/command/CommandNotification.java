@@ -59,7 +59,7 @@ public class CommandNotification extends CommandBase {
      * @param args
      */
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException { //TODO: Exception when notification doesn't exist
         Notification notification = Notification.getNotificationList().get(args[0]);
         try {
             notification.execute();

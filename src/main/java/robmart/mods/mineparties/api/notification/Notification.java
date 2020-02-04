@@ -40,13 +40,17 @@ public class Notification {
 
     private String identifier;
     private EntityPlayer playerReceiver;
-    private String message;
+    private ITextComponent message;
     private boolean hasSentMessage = false;
     private Method method;
     private Object instance;
     private Object[] args;
 
     public Notification(EntityPlayer player, String message, Method method, Object instance, Object... args) {
+        this(player, new TextComponentString(message), method, instance, args);
+    }
+
+    public Notification(EntityPlayer player, ITextComponent message, Method method, Object instance, Object... args) {
         this.playerReceiver = player;
         this.message = message;
         this.method = method;
@@ -67,11 +71,10 @@ public class Notification {
     }
 
     public void sendMessage() {
-        ITextComponent textComponent = new TextComponentString(this.message);
-        textComponent.setStyle(new Style().setUnderlined(true).setClickEvent(
+        message.setStyle(new Style().setUnderlined(true).setClickEvent(
                 new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/notification " + getIdentifier())));
 
-        playerReceiver.sendMessage(textComponent);
+        playerReceiver.sendMessage(message);
         this.hasSentMessage = true;
     }
 
