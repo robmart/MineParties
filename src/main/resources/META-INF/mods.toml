@@ -1,0 +1,25 @@
+modLoader="javafml" #mandatory
+loaderVersion="[31,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
+issueTrackerURL="https://github.com/robmart/Re-TargetingAPI/issues" #optional
+
+[[mods]]
+modId="mineparties" #mandatory
+version="${file.jarVersion}" #mandatory
+displayName="MineParties" #mandatory
+# A URL to query for updates for this mod. See the JSON update specification <here>
+# updateJSONURL="http://myurl.me/" #optional
+displayURL="https://www.curseforge.com/minecraft/mc-mods/mineparties" #optional
+logoFile="icon.png" #optional
+credits="The Forge and FML guys" #optional
+authors="Robmart" #optional
+description='''
+Mod for exposing a common targeting api.
+'''
+
+
+[[dependencies.mineparties]]
+    modId="targetingapi"
+    mandatory=true
+    versionRange="[re-0.19b,)"
+    ordering="BEFORE"
+    side="BOTH"
